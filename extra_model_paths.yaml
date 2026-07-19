@@ -1,0 +1,9 @@
+runpod_volume:
+    base_path: /runpod-volume/ComfyUI/
+    is_default: true
+    diffusion_models: models/diffusion_models
+    text_encoders: models/text_encoders
+    vae: models/vae
+    clip_vision: models/clip_vision
+    loras: models/loras
+    checkpoints: models/checkpoints
