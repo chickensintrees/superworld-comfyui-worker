@@ -17,8 +17,7 @@ RUN cd /comfyui \
       curl -fsSL https://github.com/comfyanonymous/ComfyUI/archive/refs/tags/${COMFYUI_VERSION}.tar.gz \
       | tar xz --strip-components=1; \
     fi \
- && (uv pip install -r requirements.txt \
-     || pip install --no-cache-dir -r requirements.txt)
+ && /opt/venv/bin/python -m pip install --no-cache-dir -r requirements.txt
 
 # Latest main (has LoadWanVideoT5TextEncoder) + explicit dep install. The earlier
 # comfy-node-install (registry) installed the node without its Python deps, so it
@@ -26,10 +25,8 @@ RUN cd /comfyui \
 RUN cd /comfyui/custom_nodes \
  && git clone --depth 1 https://github.com/kijai/ComfyUI-KJNodes \
  && git clone --depth 1 https://github.com/kijai/ComfyUI-WanVideoWrapper \
- && (uv pip install -r ComfyUI-KJNodes/requirements.txt \
-     || pip install --no-cache-dir -r ComfyUI-KJNodes/requirements.txt) \
- && (uv pip install -r ComfyUI-WanVideoWrapper/requirements.txt \
-     || pip install --no-cache-dir -r ComfyUI-WanVideoWrapper/requirements.txt)
+ && /opt/venv/bin/python -m pip install --no-cache-dir -r ComfyUI-KJNodes/requirements.txt \
+ && /opt/venv/bin/python -m pip install --no-cache-dir -r ComfyUI-WanVideoWrapper/requirements.txt
 
 # non-GPU sanity: the nodes ARE defined in the source (can't do a full node
 # load here — GH runners have no NVIDIA driver).
