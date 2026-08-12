@@ -1,11 +1,13 @@
 # Custom RunPod serverless ComfyUI worker for SUPERWORLD video gen
 # (Wan2.1 i2v via WanVideoWrapper + MiniMax H3 via native ComfyUI nodes).
-FROM runpod/worker-comfyui:5.8.7-base
+# 5.8.6 is the newest base actually published on Docker Hub (the 5.8.7
+# release never got images pushed); cuda12.8.1 variant for the newest stack.
+FROM runpod/worker-comfyui:5.8.6-base-cuda12.8.1
 
-# MiniMax H3 needs ComfyUI >= 0.30.0 (native nodes landed 2026-08-03); the
-# 5.8.7 base pins 0.29.0, so upgrade the comfy-cli checkout in place. torch
-# stays as the base image pinned it (2.11.0+cu128) — requirements.txt does
-# not move it.
+# MiniMax H3 needs ComfyUI >= 0.30.0 (native nodes landed 2026-08-03); no
+# worker base ships it, so upgrade the comfy-cli checkout in place. torch
+# stays as the base image pinned it — requirements.txt does not move it,
+# and the quick-test below catches any breakage.
 ARG COMFYUI_VERSION=v0.32.0
 RUN cd /comfyui \
  && if [ -d .git ]; then \

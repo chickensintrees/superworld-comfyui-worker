@@ -4,7 +4,7 @@ Custom RunPod serverless ComfyUI worker for SUPERWORLD video generation:
 - **MiniMax H3** (open-weights omni-modal video+audio, Aug 2026) via ComfyUI's
   native nodes — t2v, i2v/first-last-frame, and ref2va
 
-Base `runpod/worker-comfyui:5.8.7-base` with ComfyUI upgraded to v0.32.0
+Base `runpod/worker-comfyui:5.8.6-base-cuda12.8.1` with ComfyUI upgraded to v0.32.0
 (H3 nodes need >= 0.30.0). Models load from the attached network volume
 (`uyd3wn4j15`, US-WA-1) via `extra_model_paths.yaml`.
 Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`
