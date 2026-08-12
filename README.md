@@ -1,6 +1,50 @@
 # superworld-comfyui-worker
-Custom RunPod serverless ComfyUI worker for SUPERWORLD i2v (Wan2.1-I2V-14B).
-Base `runpod/worker-comfyui` + WanVideoWrapper + KJNodes; models from the attached
-network volume (`uyd3wn4j15`, US-WA-1) via `extra_model_paths.yaml`.
-Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`.
+Custom RunPod serverless ComfyUI worker for SUPERWORLD video generation:
+- **Wan2.1-I2V-14B** via WanVideoWrapper + KJNodes (original pipeline)
+- **MiniMax H3** (open-weights omni-modal video+audio, Aug 2026) via ComfyUI's
+  native nodes — t2v, i2v/first-last-frame, and ref2va
+
+Base `runpod/worker-comfyui:5.8.7-base` with ComfyUI upgraded to v0.32.0
+(H3 nodes need >= 0.30.0). Models load from the attached network volume
+(`uyd3wn4j15`, US-WA-1) via `extra_model_paths.yaml`.
+Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`
+(`main` only; `claude/**` branches push a sha-tagged image for testing).
+
+## MiniMax H3
+
+### One-time: models onto the network volume (~43 GB)
+
+Start any cheap pod with volume `uyd3wn4j15` attached and run:
+
+```bash
+bash scripts/download-h3-models.sh              # fl2va: t2v + i2v (~43 GB)
+bash scripts/download-h3-models.sh --ref2va     # + reference-to-video (+21 GB)
+```
+
+Smallest published variants from `Comfy-Org/MiniMax-H3`:
+int8 DiT (21 GB) + nvfp4 Qwen3-VL-32B encoder (15.7 GB) + video/audio VAEs (5.8 GB).
+
+### Endpoint GPU
+
+~43 GB of weights with ComfyUI's dynamic offloading: 48 GB VRAM (L40S/A6000)
+works; 80 GB (A100/H100) gives headroom for 2K/15s runs. Native output is
+768px short edge, 24 fps, up to ~15 s, with 32 kHz stereo audio in the mp4.
+
+### Test
+
+```bash
+export RUNPOD_API_KEY=...       # from runpod.io settings
+export RUNPOD_ENDPOINT_ID=...
+python3 scripts/test-h3.py --image still.png            # i2v from a still
+python3 scripts/test-h3.py                              # t2v
+python3 scripts/test-h3.py --length 56 --steps 8        # cheap smoke test
+```
+
+`workflows/minimax-h3-i2v.json` is the API-format graph (mirrors the official
+Comfy template: res_multistep / simple / 20 steps / BasicGuider, no CFG).
+`length` is a 24 fps frame count on the model's 17k+5 grid (56≈2.3s, 124≈5.2s,
+362≈15s). Prompts can include an `Audio:` line and a `[0s-2s]`-style timeline.
+
+## Wan2.1 (original pipeline)
+
 See `../psuedo-videos/runpod/` for the client + workflow.
