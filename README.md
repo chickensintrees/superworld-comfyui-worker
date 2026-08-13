@@ -15,7 +15,7 @@ Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`
 
 ### One-time: models onto the network volume (~43 GB)
 
-Start any cheap pod with volume `uyd3wn4j15` attached and run:
+Start any cheap pod in US-TX-3 with volume `5zhfcq5im7` attached and run:
 
 ```bash
 bash scripts/download-h3-models.sh              # fl2va: t2v + i2v (~43 GB)
