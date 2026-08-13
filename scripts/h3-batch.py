@@ -230,8 +230,13 @@ def main():
             del pending[pid]
             done += 1
         if pending:
-            q = call(f"{base}/prompt", timeout=60)
-            remaining = q.get("exec_info", {}).get("queue_remaining")
+            # The pod proxy 502s while ComfyUI restarts; a status poll must
+            # never kill the run, since the jobs outlive this client.
+            try:
+                q = call(f"{base}/prompt", timeout=60)
+                remaining = q.get("exec_info", {}).get("queue_remaining")
+            except (urllib.error.URLError, OSError) as e:
+                remaining = f"unknown ({e})"
             print(f"  [{int(time.time()-t0):>5}s] {done}/{len(queued)} done, "
                   f"queue_remaining={remaining}")
 

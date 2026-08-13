@@ -84,7 +84,9 @@ python3 scripts/h3-batch.py --url <comfy-url> --jobs jobs/ref2va-consistency.jso
 The same extractor does shot chaining — `--last` gives you a clip's final
 frame to pass as the next shot's `first_frame` so cuts continue instead of
 restarting. Note ref2va is a *separate 21 GB DiT*; alternating fl2va and
-ref2va jobs in one queue forces a model swap, so group them by mode.
+ref2va jobs in one queue does NOT free the first DiT ("0 models unloaded"):
+two 20 GB DiTs plus the 15 GB text encoder OOM-kills a 62 GB box. Group
+jobs by mode, and restart ComfyUI between modes.
 
 ### Capacity note
 
