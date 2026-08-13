@@ -140,7 +140,10 @@ def build_graph(job, base, uploaded):
         node_type = "MiniMaxH3ReferenceToVideo"
         cond["audio_vae"] = ["4", 0]
         cond["ref_image_size"] = job.get("ref_image_size", "match")
-        # Autogrow sockets are flat, prefix-numbered inputs in API format.
+        # Autogrow (COMFY_AUTOGROW_V3) sockets serialize as FLAT prefix-numbered
+        # inputs in API format -- ref_image_0, ref_image_1, ... -- not as a
+        # nested dict under "ref_images". Undocumented; verified against a live
+        # v0.32.0 server (the graph validates and executes).
         for i, path in enumerate(job.get("ref_images", [])):
             cond[f"ref_image_{i}"] = image_node(path)
 
