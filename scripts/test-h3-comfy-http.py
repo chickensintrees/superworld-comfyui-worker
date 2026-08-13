@@ -21,11 +21,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 WORKFLOW = os.path.join(HERE, "..", "workflows", "minimax-h3-i2v.json")
 
 
+UA = {"User-Agent": "h3-test/1.0"}  # Cloudflare 403s python-urllib's default UA
+
+
 def call(url, payload=None, timeout=120, raw=False):
+    headers = dict(UA)
+    if payload is not None:
+        headers["Content-Type"] = "application/json"
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode() if payload is not None else None,
-        headers={"Content-Type": "application/json"} if payload is not None else {},
+        headers=headers,
     )
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read() if raw else json.load(r)
@@ -42,7 +48,7 @@ def upload_image(base, path):
     ).encode() + data + f"\r\n--{boundary}--\r\n".encode()
     req = urllib.request.Request(
         f"{base}/upload/image", data=body,
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}", **UA},
     )
     with urllib.request.urlopen(req, timeout=120) as r:
         return json.load(r)["name"]
