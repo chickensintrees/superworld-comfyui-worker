@@ -140,12 +140,14 @@ def build_graph(job, base, uploaded):
         node_type = "MiniMaxH3ReferenceToVideo"
         cond["audio_vae"] = ["4", 0]
         cond["ref_image_size"] = job.get("ref_image_size", "match")
-        # Autogrow (COMFY_AUTOGROW_V3) sockets serialize as FLAT prefix-numbered
-        # inputs in API format -- ref_image_0, ref_image_1, ... -- not as a
-        # nested dict under "ref_images". Undocumented; verified against a live
-        # v0.32.0 server (the graph validates and executes).
-        for i, path in enumerate(job.get("ref_images", [])):
-            cond[f"ref_image_{i}"] = image_node(path)
+        # Autogrow (COMFY_AUTOGROW_V3) sockets arrive as ONE nested dict keyed
+        # by prefixed socket name -- the node's execute() takes `ref_images` and
+        # iterates .values(). Flat `ref_image_0` inputs pass validation but blow
+        # up at execution with "unexpected keyword argument".
+        refs = {f"ref_image_{i}": image_node(p)
+                for i, p in enumerate(job.get("ref_images", []))}
+        if refs:
+            cond["ref_images"] = refs
 
     g["6"] = {"class_type": node_type, "inputs": cond}
     return g, length
@@ -236,7 +238,10 @@ def main():
     if pending:
         print(f"\ntimed out with {len(pending)} unfinished: {list(pending.values())}")
         sys.exit(1)
-    print(f"\nall {done} jobs complete in {int(time.time()-t0)}s -> {args.out}/")
+    failed = len(queued) - done
+    print(f"\n{done}/{len(queued)} jobs produced output in {int(time.time()-t0)}s -> {args.out}/")
+    if failed:
+        sys.exit(f"{failed} job(s) failed")
 
 
 if __name__ == "__main__":
