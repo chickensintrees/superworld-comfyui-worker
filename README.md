@@ -6,7 +6,7 @@ Custom RunPod serverless ComfyUI worker for SUPERWORLD video generation:
 
 Base `runpod/worker-comfyui:5.8.6-base-cuda12.8.1` with ComfyUI upgraded to v0.32.0
 (H3 nodes need >= 0.30.0). Models load from the attached network volume
-(`superworld-models` / `5zhfcq5im7`, US-TX-3, 60 GB) via `extra_model_paths.yaml`.
+(`superworld-models` / `5zhfcq5im7`, US-TX-3, 100 GB) via `extra_model_paths.yaml`.
 (The old volume `uyd3wn4j15` is gone — US-WA-1 no longer offers storage.)
 Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`
 (`main` only; `claude/**` branches push a sha-tagged image for testing).
@@ -19,7 +19,7 @@ Start any cheap pod in US-TX-3 with volume `5zhfcq5im7` attached and run:
 
 ```bash
 bash scripts/download-h3-models.sh              # fl2va: t2v + i2v (~43 GB)
-bash scripts/download-h3-models.sh --ref2va     # + reference-to-video (+21 GB, needs a >=70 GB volume)
+bash scripts/download-h3-models.sh --ref2va     # + reference-to-video (+21 GB; volume is 100 GB to fit both)
 ```
 
 Smallest published variants from `Comfy-Org/MiniMax-H3`:
