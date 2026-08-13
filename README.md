@@ -6,7 +6,8 @@ Custom RunPod serverless ComfyUI worker for SUPERWORLD video generation:
 
 Base `runpod/worker-comfyui:5.8.6-base-cuda12.8.1` with ComfyUI upgraded to v0.32.0
 (H3 nodes need >= 0.30.0). Models load from the attached network volume
-(`uyd3wn4j15`, US-WA-1) via `extra_model_paths.yaml`.
+(`superworld-models` / `5zhfcq5im7`, US-TX-3, 60 GB) via `extra_model_paths.yaml`.
+(The old volume `uyd3wn4j15` is gone — US-WA-1 no longer offers storage.)
 Built by GitHub Actions → `ghcr.io/<owner>/superworld-comfyui-worker:latest`
 (`main` only; `claude/**` branches push a sha-tagged image for testing).
 
@@ -32,13 +33,29 @@ works; 80 GB (A100/H100) gives headroom for 2K/15s runs. Native output is
 
 ### Test
 
+Serverless endpoint: `minimax-h3` (`vw3tyxi0ua5374`), volume attached, 48 GB GPUs.
+
 ```bash
 export RUNPOD_API_KEY=...       # from runpod.io settings
-export RUNPOD_ENDPOINT_ID=...
+export RUNPOD_ENDPOINT_ID=vw3tyxi0ua5374
 python3 scripts/test-h3.py --image still.png            # i2v from a still
 python3 scripts/test-h3.py                              # t2v
 python3 scripts/test-h3.py --length 56 --steps 8        # cheap smoke test
 ```
+
+Or against a pod / local ComfyUI directly (no serverless layer):
+
+```bash
+python3 scripts/test-h3-comfy-http.py --url https://<podid>-8188.proxy.runpod.net --length 56 --steps 8
+```
+
+Verified 2026-08-13 on an L40S (US-TX-3): t2v 56f/8 steps in ~8 min cold
+(incl. full model load), 124f/20 steps in ~11 min warm; output 1344x768
+h264 + stereo AAC. Pod-mode note: the image's default `/start.sh` runs the
+serverless handler, which exits outside serverless ("test_input.json not
+found") and crash-loops the pod — override the entrypoint to launch
+`python /comfyui/main.py --listen 0.0.0.0 --port 8188` after the model
+download (see scripts/download-h3-models.sh header).
 
 `workflows/minimax-h3-i2v.json` is the API-format graph (mirrors the official
 Comfy template: res_multistep / simple / 20 steps / BasicGuider, no CFG).
