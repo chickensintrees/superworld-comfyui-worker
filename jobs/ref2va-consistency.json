@@ -1,0 +1,26 @@
+{
+  "_comment": "Character consistency with ref2va. Reference media is addressed in the prompt by 1-based ordinal per type: <Picture 1>..<Picture 9>, <Video 1>..<Video 3>, <Audio 1>..<Audio 3>. Paths are relative to where you run h3-batch.py. Get a character still out of an existing clip with scripts/extract-ref.py.",
+  "defaults": {
+    "mode": "ref2va",
+    "length": 124,
+    "steps": 20,
+    "width": 1344,
+    "height": 768,
+    "ref_image_size": "match"
+  },
+  "jobs": [
+    {
+      "name": "family-livingroom",
+      "seed": 5150,
+      "ref_images": ["stills/cartoon-family.png"],
+      "prompt": "<Picture 1> The exact same cartoon family from the reference image, same faces, same hair, same clothes: the lanky redheaded dad with round glasses and a mustard cardigan, the mom with a short teal bob and green dress, the freckled kid with wild orange curls. Now crowded onto a sagging plaid sofa in their wood-panelled living room, watching a boxy television that lights their faces.\n\nTimeline:\n[0s-2s] The three of them stare slack-jawed at the TV, its glow flickering across their faces.\n[2s-4s] The kid slowly reaches for the last snack in a bowl without looking away from the screen.\n[4s-5.2s] Dad's hand arrives at the empty bowl, he looks down, then deadpan straight at camera.\n\n1990s American animated sitcom, flat cel-shaded 2D cartoon, bold black outlines, saturated primary colors, grainy broadcast look. Locked-off camera, cartoon physics, exaggerated expressions.\n\nAudio: muffled television chatter, a laugh track swelling at 4.5s, the hollow scrape of an empty snack bowl at 4s.",
+      "ref_image_size": "max"
+    },
+    {
+      "name": "family-driveway",
+      "seed": 5151,
+      "ref_images": ["stills/cartoon-family.png"],
+      "prompt": "<Picture 1> The same cartoon family from the reference, unchanged in face and wardrobe, now standing in a suburban driveway beside a boxy station wagon packed to the roof with luggage.\n\nTimeline:\n[0s-2s] Dad slaps the roof of the wagon with proud confidence.\n[2s-3.5s] A single suitcase slides off the far side and bursts open off-screen.\n[3.5s-5.2s] Mom closes her eyes, the kid points and cackles, dad's smile holds far too long.\n\n1990s American animated sitcom, flat cel-shaded 2D cartoon, bold black outlines, saturated primary colors. Static wide shot, cartoon physics.\n\nAudio: cheerful suburban morning birds, a hollow metallic slap at 0.5s, an off-screen clatter at 2.5s, canned laughter at 4s."
+    }
+  ]
+}

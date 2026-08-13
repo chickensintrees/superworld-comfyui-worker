@@ -65,6 +65,27 @@ Each job may set `mode` (`fl2va` default, or `ref2va`), `prompt`, `seed`,
 ref2va `ref_images` (up to 9) + `ref_image_size` (`match` | `max`).
 Off-grid `length` values are snapped up to the 17k+5 frame grid.
 
+### Character consistency (ref2va)
+
+Reference media is addressed in the prompt by 1-based ordinal per type —
+`<Picture 1>`, `<Video 1>`, `<Audio 1>` — and the model matches identity,
+wardrobe, motion or voice from it. Up to 9 images, 3 videos, 3 audio clips.
+`ref_image_size: "max"` uses the 2048px reference pipeline for the best
+identity fidelity, at the cost of speed (reference tokens ride through
+every sampling step).
+
+Pull a character still out of a clip you already generated, then reuse it:
+
+```bash
+python3 scripts/extract-ref.py h3-output/cartoon-dinner.mp4 --frame 60 --out stills/cartoon-family.png
+python3 scripts/h3-batch.py --url <comfy-url> --jobs jobs/ref2va-consistency.json
+```
+
+The same extractor does shot chaining — `--last` gives you a clip's final
+frame to pass as the next shot's `first_frame` so cuts continue instead of
+restarting. Note ref2va is a *separate 21 GB DiT*; alternating fl2va and
+ref2va jobs in one queue forces a model swap, so group them by mode.
+
 ### Capacity note
 
 Network volumes are datacenter-locked, so the models can only be used by a
