@@ -19,7 +19,7 @@ Start any cheap pod with volume `uyd3wn4j15` attached and run:
 
 ```bash
 bash scripts/download-h3-models.sh              # fl2va: t2v + i2v (~43 GB)
-bash scripts/download-h3-models.sh --ref2va     # + reference-to-video (+21 GB)
+bash scripts/download-h3-models.sh --ref2va     # + reference-to-video (+21 GB, needs a >=70 GB volume)
 ```
 
 Smallest published variants from `Comfy-Org/MiniMax-H3`:
@@ -48,6 +48,29 @@ Or against a pod / local ComfyUI directly (no serverless layer):
 ```bash
 python3 scripts/test-h3-comfy-http.py --url https://<podid>-8188.proxy.runpod.net --length 56 --steps 8
 ```
+
+### Batch queue (preferred — avoids repeated cold starts)
+
+The expensive part of an H3 run is loading ~43 GB of weights, not sampling.
+ComfyUI keeps them resident between queued prompts, so submit the whole
+batch at once and only the first job pays:
+
+```bash
+python3 scripts/h3-batch.py --url https://<podid>-8188.proxy.runpod.net \
+    --jobs jobs/example.json --out h3-output
+```
+
+Each job may set `mode` (`fl2va` default, or `ref2va`), `prompt`, `seed`,
+`length`, `steps`, `width`/`height`, `first_frame`/`last_frame`, and for
+ref2va `ref_images` (up to 9) + `ref_image_size` (`match` | `max`).
+Off-grid `length` values are snapped up to the 17k+5 frame grid.
+
+### Capacity note
+
+Network volumes are datacenter-locked, so the models can only be used by a
+GPU in **US-TX-3**. 48 GB-class stock there is intermittent; when it is dry,
+both pods and the serverless endpoint simply wait. Grab a pod when one frees
+up and keep it warm for the whole batch rather than starting per clip.
 
 Verified 2026-08-13 on an L40S (US-TX-3): t2v 56f/8 steps in ~8 min cold
 (incl. full model load), 124f/20 steps in ~11 min warm; output 1344x768

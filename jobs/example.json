@@ -1,0 +1,25 @@
+{
+  "defaults": {
+    "length": 124,
+    "steps": 20,
+    "width": 1344,
+    "height": 768
+  },
+  "jobs": [
+    {
+      "name": "cartoon-dinner",
+      "seed": 4242,
+      "prompt": "1990s American animated sitcom, flat cel-shaded 2D cartoon, bold black outlines, saturated primary colors, slightly grainy broadcast look. An original cartoon family at a chaotic dinner table in a cozy suburban dining room: a lanky redheaded dad with round glasses and a mustard cardigan, a mom with a short teal bob and green dress, a freckled kid with wild orange curls. A towering lime gelatin mold sits center table, wobbling ominously.\n\nTimeline:\n[0s-1.5s] Mom proudly sets down the giant wobbling gelatin mold, it jiggles in exaggerated squash-and-stretch.\n[1.5s-3s] Dad reaches in with a fork, eyes gleaming; the kid flicks a single pea across the table.\n[3s-5.2s] The pea hits the mold, the gelatin gulps the dad's fork whole with a comic ripple, the family freezes in a classic sitcom take, dad's glasses slide down his nose.\n\nStatic sitcom camera, one slow slight push-in, cartoon physics, exaggerated expressions.\n\nAudio: bouncy 90s sitcom brass-and-clarinet underscore, cartoon boing on each jiggle, a wet gulp at 3.5s, canned studio-audience laughter swelling at 4s, dad groans 'aw, not the good fork!'"
+    },
+    {
+      "name": "superworld-console",
+      "seed": 7701,
+      "prompt": "35mm photograph of an alternate-1960s broadcast control console in a dark studio. Amber tube glow, brushed aluminum panels with visible weld marks, TEMPERATURE and CONSTRAINT knobs with vernier scales in units nobody can identify. 35mm film grain, documentary photography style.\n\nTimeline:\n[0s-2s] Darkness, then a single tube warms to amber, revealing the console's edge.\n[2s-4s] Slow push-in as more tubes ignite in sequence down the panel, needles twitching on the meters.\n[4s-5.2s] The full console glows, one meter needle pins hard right and holds.\n\nSlow deliberate camera push-in, dust motes drifting in warm light, no cuts.\n\nAudio: low electrical hum rising in pitch, faint tape hiss, a soft relay click at 2s, a deep resonant thunk at 4.5s."
+    },
+    {
+      "name": "superworld-title",
+      "seed": 7702,
+      "prompt": "Medium format photograph of an alternate-1960s broadcast monitor on a workbench, screen filling most of the frame. Amber phosphor glow, brushed aluminum bezel, film grain. Text reads SUPERWORLD! in bold broadcast lettering on the screen.\n\nTimeline:\n[0s-1.5s] The screen is static snow, the bezel barely lit.\n[1.5s-3.5s] The text SUPERWORLD! resolves out of the snow, sharp and legible, glowing amber.\n[3.5s-5.2s] The letters begin to dissolve as you watch, edges eating themselves back into static.\n\nLocked-off camera, no push-in, the only motion is on the screen.\n\nAudio: television static, a carrier tone locking in at 1.5s, the tone detuning and sliding away in the last second."
+    }
+  ]
+}
