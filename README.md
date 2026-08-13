@@ -74,6 +74,16 @@ wardrobe, motion or voice from it. Up to 9 images, 3 videos, 3 audio clips.
 identity fidelity, at the cost of speed (reference tokens ride through
 every sampling step).
 
+**Use `"max"` for any shot with characters in it.** Measured 2026-08-13 on
+the same reference still and prompts: at `"match"`, one of two shots held
+identity and the other abandoned the reference entirely and regenerated the
+cast as lookalikes of well-known network cartoon characters. Re-running that
+shot at `"max"` (and putting the identity instruction first in the prompt)
+restored the correct characters. Identity drift is not only a quality
+problem — when the reference stops steering, the model falls back on the
+famous shows in its training data, which is an IP hazard. Review any shot
+where faces or wardrobe shift.
+
 Pull a character still out of a clip you already generated, then reuse it:
 
 ```bash
